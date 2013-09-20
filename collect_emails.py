@@ -94,7 +94,7 @@ def getEmail(emailAsString):
 def get_multilingual_header(header_text, default="ascii"):
     if not header_text is None:
         try:
-            headers = header.decode_header(header_text)
+            headers = decode_header(header_text)
         except email.errors.HeaderParseError:
             return u"Error"
 
@@ -192,10 +192,12 @@ def AnalyseMessage(message, processesMultipartMessages = []):
                     if len(mail_list[0]) == 0:
                         str_list.append(mail_list[1])
                     elif mail_list[0][:-len(mail_list[0])+2] == '=?':
-                        h = decode_header(mail_list[0]) 
+                        # h = decode_header(mail_list[0]) 
                         h = get_multilingual_header(mail_list[0])
-                        print h
-                        str_list.append( h[0][0].decode(h[0][1]).encode("utf-8") )
+                        if type(h) == type(None):
+                            str_list.append(mail_list[0][:-len(mail_list[0])+2])
+                        else:
+                            str_list.append( h[0][0].decode(h[0][1]).encode("utf-8") )
                     else:
                         str_list.append(mail_list[0])
 
@@ -206,13 +208,12 @@ def AnalyseMessage(message, processesMultipartMessages = []):
 
         print mailString
         
-        """
         with open(os.path.join(currentFolder['output'], currentFolder['root'] + "." + currentFolder['name'] + ".dat"), "a") as myfile:
             myfile.write(mailString)
 
         with open(os.path.join(currentFolder['output'], currentFolder['root'] + "._all_.dat"), "a") as myfile:
             myfile.write(mailString)
-        """  
+
         # ---------------------------------------------------------------------
         if (message.is_multipart()):
             for submessage in message.walk():
