@@ -190,15 +190,15 @@ def AnalyseMessage(message, processesMultipartMessages = []):
                     if len(mail_list[0]) == 0:
                         str_list.append(mail_list[1])
                     elif mail_list[0][:-len(mail_list[0])+2] == '=?':
-                        # h = decode_header(mail_list[0]) 
-                        h = get_multilingual_header(mail_list[0])
+                        h = decode_header(mail_list[0]) 
+                        # h = get_multilingual_header(mail_list[0])
                         if type(h) == type(None):
-                            str_list.append(mail_list[0][10:-2])
+                            str_list.append(mail_list[0])
                         else:
                             try:
                                 str_list.append( h[0][0].decode(h[0][1]).encode("utf-8") )
                             except Exception, e:
-                                str_list.append(mail_list[0][10:-2])
+                                str_list.append(mail_list[0])
                             
                     else:
                         str_list.append(mail_list[0])
